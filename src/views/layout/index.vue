@@ -1,6 +1,8 @@
 <template>
   <div class="page">
+    <keep-alive>
     <router-view/>
+    </keep-alive>
     <van-tabbar v-model="active" route>
       <van-tabbar-item icon="home-o" to="/">首页</van-tabbar-item>
       <van-tabbar-item icon="friends-o" to="/personal">我的</van-tabbar-item>
@@ -21,7 +23,9 @@ export default {
  computed: {},
  watch: {},
  created (){},
- mounted (){},
+ mounted (){
+   this.$store.commit('setCachePages','LayoutIndex')
+ },
  methods: {}
 }
 </script>

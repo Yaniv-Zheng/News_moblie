@@ -1,12 +1,12 @@
-export const storage = (name,data) =>{
-  if(data instanceof Object){
+export const setStorage = (name,data) =>{
     return window.localStorage.setItem(name,JSON.stringify(data))
-  }else{
-    try {
-      return JSON.parse(window.localStorage.getItem(name))
-    } catch (error) {
-      return data
-    }
+  }
+
+export const getStorage = name =>{
+  try {
+    return JSON.parse(window.localStorage.getItem(name))
+  } catch (error) {
+    return data
   }
 }
 

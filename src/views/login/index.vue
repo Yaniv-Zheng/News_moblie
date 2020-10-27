@@ -101,11 +101,12 @@ export default {
         message: '登录成功',
         position: 'bottom',
       })
-      console.log(res)
       this.$store.commit('setUsers',res.data.data)
+      this.$router.push(this.$route.query.redirect || 'personal')
+      this.$store.commit('removeCachePages','LayoutIndex')
     } catch (error) {
       Toast({
-        message: '登录失败',
+        message: '登录失败:账号或密码错误',
         position: 'bottom',
       })
     }

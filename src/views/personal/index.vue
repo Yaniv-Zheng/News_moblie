@@ -5,38 +5,38 @@
     </div>
     <div class="per_data">
       <van-row>
-        <van-col class="per_img" span="8">
+        <van-col class="per_img" span="8" @click="linkTo">
           <van-image
             round
             width="2rem"
             height="2rem"
             fit="cover"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
+            :src="user?data.photo:'https://s1.ax1x.com/2020/10/23/BAujIA.png'"
           />
-          <div>诡异组织</div>
+          <div>{{user?data.name:'点击登录'}}</div>
         </van-col>
         <van-col span="16">
           <div class="per_num">
             <van-row>
               <van-col span="6">
-                <span>6</span>
+                <span>{{user?data.art_count:'━'}}</span>
                 <div>发布</div>
               </van-col>
               <van-col span="6">
-                <span>6</span>
+                <span>{{user?data.fans_count:'━'}}</span>
                 <div>粉丝</div>
               </van-col>
               <van-col span="6">
-                <span>6</span>
+                <span>{{user?data.follow_count:'━'}}</span>
                 <div>关注</div>
               </van-col>
               <van-col span="6">
-                <span>6</span>
+                <span>{{user?data.like_count:'━'}}</span>
                 <div>获赞</div>
               </van-col>
             </van-row>
             <div class="per_btn">
-              <van-button color="red" plain>编辑资料</van-button>
+              <van-button color="red" plain :disabled="user?false:true">编辑资料</van-button>
             </div>
           </div>
         </van-col>
@@ -62,28 +62,55 @@
         </van-col>
       </van-row>
     </div>
-    <div class="pre_more">
+    <div class="pre_more" >
       <van-cell title="消息通知" is-link to="index" icon="comment-o"></van-cell>
       <van-cell title="联系客服" is-link to="index" icon="service-o"/>
       <van-cell title="设置" is-link to="index" icon="setting-o"/>
     </div>
-    <van-button class="pre_quit">退出登录</van-button>
+    <van-button class="pre_quit" v-if="user" @click="quitLogin">退出登录</van-button>
   </div>
 </template>
 
 <script>
+import { getUsers } from '@/api/user'
+import { removeStorage } from '@/utils/storage'
+import { mapState } from 'vuex'
 export default {
  name: 'PersonalIndex',
  components: {},
  props: {},
  data() {
-   return {}
+   return {
+     data:{}
+   }
  },
- computed: {},
+ computed: {
+   ...mapState(['user'])
+ },
  watch: {},
- created (){},
+ created (){
+   if(this.user){
+     this.loadGetUsers()
+   }
+ },
  mounted (){},
- methods: {}
+ methods: {
+   linkTo(){
+     this.user?null:this.$router.push('login')
+   },
+   quitLogin(){
+     removeStorage('user')
+     this.$store.commit('setUsers',null)
+     removeStorage('img')
+     this.$store.commit('removeCachePages','LayoutIndex')
+   },
+   async loadGetUsers(){
+     const {data} = await getUsers()
+     const data_img = data.data.photo
+     this.data = data.data
+     window.localStorage.setItem('img',JSON.stringify(data_img))
+   }
+ }
 }
 </script>
 
